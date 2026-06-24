@@ -1,436 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Social Hub · full‑screen iframe dashboard</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Hub · Smart Iframe Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
 
-    body {
-      background: #0b0e14;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
+        body {
+            background: #0b0e14;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
 
-    /* main dashboard card */
-    .dashboard {
-      max-width: 1000px;
-      width: 100%;
-      background: #161b22;
-      border-radius: 2.5rem;
-      padding: 2rem 1.5rem 2.5rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.03);
-      transition: all 0.2s ease;
-    }
+        .dashboard {
+            max-width: 1100px;
+            width: 100%;
+            background: #161b22;
+            border-radius: 2.5rem;
+            padding: 2rem 1.5rem 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2a3340;
+        }
 
-    h1 {
-      font-weight: 500;
-      font-size: 1.8rem;
-      letter-spacing: -0.01em;
-      color: #f0f3f8;
-      text-align: center;
-      margin-bottom: 1.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
+        h1 {
+            font-weight: 500;
+            font-size: 1.8rem;
+            color: #f0f3f8;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
 
-    h1 span {
-      background: #2d3748;
-      padding: 0.2rem 1rem;
-      border-radius: 40px;
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: #a0b3d9;
-    }
+        .subtitle {
+            text-align: center;
+            color: #6a7fa0;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #242d3b;
+            padding-bottom: 1rem;
+        }
 
-    /* grid of social logos */
-    .social-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 1.2rem;
-      justify-items: center;
-      align-items: center;
-      margin: 1.5rem 0 2rem;
-    }
+        .subtitle .badge-embed {
+            background: #1d8a4f;
+            color: #fff;
+            padding: 0.1rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
 
-    .social-card {
-      background: #1e2630;
-      width: 100%;
-      max-width: 130px;
-      aspect-ratio: 1 / 1;
-      border-radius: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.3rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-      border: 1px solid #2f3947;
-      padding: 0.5rem;
-    }
+        .subtitle .badge-link {
+            background: #8a6e1d;
+            color: #fff;
+            padding: 0.1rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
 
-    .social-card:hover {
-      transform: scale(1.03);
-      background: #29323f;
-      border-color: #5a6f8c;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-    }
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1.2rem;
+            justify-items: center;
+            margin: 1.5rem 0;
+        }
 
-    .social-card:active {
-      transform: scale(0.96);
-    }
+        .social-card {
+            background: #1e2630;
+            width: 100%;
+            max-width: 150px;
+            aspect-ratio: 1 / 1;
+            border-radius: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 1px solid #2f3947;
+            padding: 0.5rem;
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+        }
 
-    /* logo images — SVG inline or fallback text */
-    .logo-svg {
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: filter 0.2s;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
-    }
+        .social-card:hover {
+            transform: scale(1.04);
+            background: #29323f;
+            border-color: #5a6f8c;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
 
-    .social-card span {
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      color: #b4c8e8;
-      opacity: 0.9;
-      background: #0f141c;
-      padding: 0.2rem 0.7rem;
-      border-radius: 20px;
-      border: 1px solid #314159;
-    }
+        .social-card:active {
+            transform: scale(0.95);
+        }
 
-    /* full‑screen iframe overlay */
-    .iframe-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #0b0e14;
-      z-index: 9999;
-      display: none;
-      flex-direction: column;
-      animation: fadeIn 0.2s ease;
-    }
+        .social-card .logo-svg {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .iframe-overlay.active {
-      display: flex;
-    }
+        .social-card .platform-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #b4c8e8;
+            background: #0f141c;
+            padding: 0.15rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid #314159;
+            letter-spacing: 0.3px;
+        }
 
-    .iframe-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.8rem 1.2rem;
-      background: #131a22;
-      border-bottom: 1px solid #2c3848;
-      flex-shrink: 0;
-    }
+        .social-card .embed-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            background: #1d8a4f;
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
 
-    .iframe-header .platform-title {
-      color: #e8edf5;
-      font-weight: 500;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
+        .social-card .link-badge {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            background: #8a6e1d;
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
 
-    .iframe-header .platform-title .badge {
-      background: #2a3649;
-      padding: 0.1rem 0.8rem;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      font-weight: 400;
-      color: #a3b9dd;
-    }
+        /* Full‑screen overlay */
+        .iframe-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0b0e14;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.2s ease;
+        }
 
-    .close-btn {
-      background: #2c3a4e;
-      border: none;
-      color: #f0f4fe;
-      font-size: 1.7rem;
-      line-height: 1;
-      padding: 0.1rem 1.1rem;
-      border-radius: 40px;
-      cursor: pointer;
-      font-weight: 300;
-      transition: 0.15s;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-      border: 1px solid #44556b;
-    }
+        .iframe-overlay.active {
+            display: flex;
+        }
 
-    .close-btn:hover {
-      background: #3f506a;
-      transform: scale(1.02);
-    }
+        .iframe-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 1.2rem;
+            background: #131a22;
+            border-bottom: 1px solid #2c3848;
+            flex-shrink: 0;
+        }
 
-    .iframe-wrapper {
-      flex: 1;
-      width: 100%;
-      background: #000;
-      position: relative;
-      overflow: hidden;
-    }
+        .iframe-header .platform-title {
+            color: #e8edf5;
+            font-weight: 500;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
 
-    .iframe-wrapper iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-      background: #fff;
-    }
+        .iframe-header .platform-title .mode-tag {
+            background: #2a3649;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #a3b9dd;
+        }
 
-    /* small note */
-    .footer-note {
-      margin-top: 1.2rem;
-      text-align: center;
-      color: #5e7291;
-      font-size: 0.8rem;
-      letter-spacing: 0.2px;
-      border-top: 1px solid #242d3b;
-      padding-top: 1.5rem;
-    }
+        .close-btn {
+            background: #2c3a4e;
+            border: none;
+            color: #f0f4fe;
+            font-size: 1.6rem;
+            line-height: 1;
+            padding: 0 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 300;
+            transition: 0.15s;
+            border: 1px solid #44556b;
+        }
 
-    .footer-note a {
-      color: #7e96c2;
-      text-decoration: none;
-      border-bottom: 1px dotted #3f4f69;
-    }
+        .close-btn:hover {
+            background: #3f506a;
+            transform: scale(1.02);
+        }
 
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
+        .iframe-wrapper {
+            flex: 1;
+            width: 100%;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
 
-    /* responsive */
-    @media (max-width: 550px) {
-      .dashboard { padding: 1.2rem 0.8rem; }
-      .social-grid { grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
-      .social-card { max-width: 100%; border-radius: 1.5rem; }
-      .logo-svg { width: 40px; height: 40px; }
-      .social-card span { font-size: 0.6rem; padding: 0.1rem 0.5rem; }
-      h1 { font-size: 1.4rem; }
-    }
+        .iframe-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            background: #fff;
+        }
 
-    @media (max-width: 400px) {
-      .social-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-  </style>
+        .fallback-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            background: #0f141c;
+            color: #b4c8e8;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .fallback-message h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #e8edf5;
+        }
+
+        .fallback-message p {
+            max-width: 400px;
+            margin-bottom: 1.5rem;
+            color: #8899bb;
+        }
+
+        .fallback-message .btn-open {
+            background: #2a6bf0;
+            color: #fff;
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .fallback-message .btn-open:hover {
+            background: #3b7bfa;
+            transform: scale(1.03);
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .dashboard {
+                padding: 1.2rem 0.8rem;
+            }
+            .social-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
+            }
+            .social-card {
+                max-width: 100%;
+                border-radius: 1.2rem;
+            }
+            .social-card .logo-svg {
+                width: 38px;
+                height: 38px;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .social-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="dashboard">
-  <h1>
-    🌐 Social Hub
-    <span>click · fullscreen</span>
-  </h1>
+    <div class="dashboard">
+        <h1>🌐 Social Hub</h1>
+        <div class="subtitle">
+            <span class="badge-embed">🟢 embed</span> = works in iframe &nbsp;·&nbsp;
+            <span class="badge-link">🟡 link</span> = opens in new tab (blocked by platform)
+        </div>
 
-  <!-- grid of platforms -->
-  <div class="social-grid" id="socialGrid">
-    <!-- Facebook -->
-    <div class="social-card" data-platform="Facebook" data-url="https://www.facebook.com/">
-      <div class="logo-svg">
-        <svg viewBox="0 0 24 24" width="50" height="50" fill="#1877F2">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-        </svg>
-      </div>
-      <span>Facebook</span>
+        <div class="social-grid" id="socialGrid">
+            <!-- Each card: data-embed="true" means it CAN be iframed -->
+            <!-- YouTube: embed allowed via youtube.com/embed/ -->
+            <div class="social-card" data-platform="YouTube" data-url="https://www.youtube.com/embed/" data-embed="true" data-embed-url="https://www.youtube.com/embed/">
+                <div class="logo-svg">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="#FF0000">
+                        <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                </div>
+                <span class="platform-name">YouTube</span>
+                <span class="embed-badge">embed</span>
+            </div>
+
+            <!-- X (Twitter) embed: use platform.twitter.com/widgets/tweet? -->
+            <div class="social-card" data-platform="X (Twitter)" data-url="https://x.com/" data-embed="true" data-embed-url="https://platform.twitter.com/widgets/tweet?">
+                <div class="logo-svg">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="#FFFFFF">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                </div>
+                <span class="platform-name">X</span>
+                <span class="embed-badge">embed</span>
+            </div>
+
+            <!-- TikTok embed: use www.tiktok.com/embed/ -->
+            <div class="social-card" data-platform="TikTok" data-url="https://www.tiktok.com/" data-embed="true" data-embed-url="https://www.tiktok.com/embed/">
+                <div class="logo-svg">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="#FFFFFF">
+                        <path d="M22.49 8.207v5.23a8.41 8.41 0 01-4.8-1.555v6.965a7.936 7.936 0 01-7.928 7.927A7.936 7.936 0 011.833 19.93a7.934 7.934 0 017.93-7.93h.667v4.858a2.836 2.836 0 00-1.413-1.463 2.84 2.84 0 00-3.848 1.478 2.844 2.844 0 001.478 3.848 2.845 2.845 0 003.848-1.478 2.84 2.84 0 00.158-1.386V1.995h4.804a5.444 5.444 0 001.48 3.637 5.46 5.46 0 003.587 1.705l.005.87z"/>
+                    </svg>
+                </div>
+                <span class="platform-name">TikTok</span>
+                <span class="embed-badge">embed</span>
+            </div>
+
+            <!-- Facebook: BLOCKED (will open in new tab) -->
+            <div class="social-card" data-platform="Facebook" data-url="https://www.facebook.com/" data-embed="false">
+                <div class="logo-svg">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="#1877F2">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </div>
+                <span class="platform-name">Facebook</span>
+                <span class="link-badge">🔗 link</span>
+            </div>
+
+            <!-- Instagram: BLOCKED -->
+            <div class="social-card" data-platform="Instagram" data-url="https://www.instagram.com/" data-embed="false">
+                <div class="logo-svg">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="#E4405F">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                    </svg>
+                </div>
+                <span class="platform-name">Instagram</span>
+                <span class="link-badge">🔗 link</span>
+            </div>
+
+            <!-- Messenger: BLOCKED -->
+            <div class="social-card" data-platform="Messenger" data-url="https://www.messenger.com/" data-embed="false">
+                <div class="logo-svg">
+                    <svg viewBox="0 0 24 24" width="48" height="48" fill="#00B2FF">
+                        <path d="M12 0C5.373 0 0 5.373 0 12c0 6.016 4.432 10.984 10.206 11.852v-8.38H7.13v-3.47h3.075V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.38C19.568 22.984 24 18.016 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                </div>
+                <span class="platform-name">Messenger</span>
+                <span class="link-badge">🔗 link</span>
+            </div>
+        </div>
+
+        <div style="text-align:center;color:#5e7291;font-size:0.8rem;margin-top:1rem;border-top:1px solid #242d3b;padding-top:1.2rem;">
+            🟢 <strong>Embed</strong> = works inside iframe &nbsp;·&nbsp; 🟡 <strong>Link</strong> = opens in new tab (platform blocks iframe)
+        </div>
     </div>
 
-    <!-- Instagram -->
-    <div class="social-card" data-platform="Instagram" data-url="https://www.instagram.com/">
-      <div class="logo-svg">
-        <svg viewBox="0 0 24 24" width="50" height="50" fill="#E4405F">
-          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-        </svg>
-      </div>
-      <span>Instagram</span>
+    <!-- Full‑screen iframe overlay -->
+    <div class="iframe-overlay" id="iframeOverlay">
+        <div class="iframe-header">
+            <div class="platform-title">
+                <span id="platformName">Platform</span>
+                <span class="mode-tag" id="modeTag">🔓 iframe</span>
+            </div>
+            <button class="close-btn" id="closeIframeBtn">✕</button>
+        </div>
+        <div class="iframe-wrapper" id="iframeWrapper">
+            <iframe id="socialIframe" src="about:blank" allow="encrypted-media; fullscreen; camera; microphone; display-capture; autoplay; clipboard-write" loading="eager"></iframe>
+        </div>
     </div>
 
-    <!-- YouTube -->
-    <div class="social-card" data-platform="YouTube" data-url="https://www.youtube.com/">
-      <div class="logo-svg">
-        <svg viewBox="0 0 24 24" width="50" height="50" fill="#FF0000">
-          <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-        </svg>
-      </div>
-      <span>YouTube</span>
-    </div>
+    <script>
+        (function() {
+            const overlay = document.getElementById('iframeOverlay');
+            const iframe = document.getElementById('socialIframe');
+            const platformNameSpan = document.getElementById('platformName');
+            const modeTag = document.getElementById('modeTag');
+            const closeBtn = document.getElementById('closeIframeBtn');
+            const iframeWrapper = document.getElementById('iframeWrapper');
 
-    <!-- X (Twitter) -->
-    <div class="social-card" data-platform="X" data-url="https://x.com/">
-      <div class="logo-svg">
-        <svg viewBox="0 0 24 24" width="50" height="50" fill="#FFFFFF">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-        </svg>
-      </div>
-      <span>X</span>
-    </div>
+            // Store current fallback URL for link mode
+            let currentFallbackUrl = '';
 
-    <!-- Messenger -->
-    <div class="social-card" data-platform="Messenger" data-url="https://www.messenger.com/">
-      <div class="logo-svg">
-        <svg viewBox="0 0 24 24" width="50" height="50" fill="#00B2FF">
-          <path d="M12 0C5.373 0 0 5.373 0 12c0 6.016 4.432 10.984 10.206 11.852v-8.38H7.13v-3.47h3.075V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.38C19.568 22.984 24 18.016 24 12c0-6.627-5.373-12-12-12z"/>
-        </svg>
-      </div>
-      <span>Messenger</span>
-    </div>
+            function closeIframe() {
+                overlay.classList.remove('active');
+                iframe.src = 'about:blank';
+                document.body.style.overflow = '';
+                currentFallbackUrl = '';
+            }
 
-    <!-- TikTok (extra) -->
-    <div class="social-card" data-platform="TikTok" data-url="https://www.tiktok.com/">
-      <div class="logo-svg">
-        <svg viewBox="0 0 24 24" width="50" height="50" fill="#FFFFFF">
-          <path d="M22.49 8.207v5.23a8.41 8.41 0 01-4.8-1.555v6.965a7.936 7.936 0 01-7.928 7.927A7.936 7.936 0 011.833 19.93a7.934 7.934 0 017.93-7.93h.667v4.858a2.836 2.836 0 00-1.413-1.463 2.84 2.84 0 00-3.848 1.478 2.844 2.844 0 001.478 3.848 2.845 2.845 0 003.848-1.478 2.84 2.84 0 00.158-1.386V1.995h4.804a5.444 5.444 0 001.48 3.637 5.46 5.46 0 003.587 1.705l.005.87z"/>
-        </svg>
-      </div>
-      <span>TikTok</span>
-    </div>
-  </div>
+            // For embed platforms: show in iframe
+            function openEmbed(url, platformName) {
+                iframe.src = url;
+                platformNameSpan.textContent = platformName || 'Platform';
+                modeTag.textContent = '🟢 embed';
+                modeTag.style.color = '#7ddfa0';
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
 
-  <div class="footer-note">
-    ⚡ Click any logo → full‑screen iframe · you can log in & use the platform
-  </div>
-</div>
+            // For blocked platforms: show fallback with "Open in new tab" button
+            function showFallback(platformName, url) {
+                // Clear iframe
+                iframe.src = 'about:blank';
+                platformNameSpan.textContent = platformName || 'Platform';
+                modeTag.textContent = '🟡 link (blocked)';
+                modeTag.style.color = '#e8c86a';
 
-<!-- full‑screen iframe overlay -->
-<div class="iframe-overlay" id="iframeOverlay">
-  <div class="iframe-header">
-    <div class="platform-title" id="platformTitle">
-      <span id="platformName">Platform</span>
-      <span class="badge">🔓 full screen</span>
-    </div>
-    <button class="close-btn" id="closeIframeBtn">✕</button>
-  </div>
-  <div class="iframe-wrapper">
-    <iframe id="socialIframe" src="about:blank" allow="encrypted-media; fullscreen; camera; microphone; display-capture; autoplay; clipboard-write" loading="eager"></iframe>
-  </div>
-</div>
+                // Build fallback UI inside iframe wrapper
+                iframeWrapper.innerHTML = `
+                    <div class="fallback-message">
+                        <h2>🔒 ${platformName} blocks iframe</h2>
+                        <p>For security reasons, ${platformName} does not allow being displayed inside an iframe.<br><br>
+                        <strong>Click the button below to open it in a new tab.</strong></p>
+                        <a href="${url}" target="_blank" rel="noopener noreferrer" class="btn-open">
+                            🌐 Open ${platformName} in new tab
+                        </a>
+                        <p style="margin-top:1.2rem;font-size:0.75rem;color:#667799;">
+                            ⚡ You can log in and use it normally in the new tab.
+                        </p>
+                    </div>
+                `;
 
-<script>
-  (function() {
-    const overlay = document.getElementById('iframeOverlay');
-    const iframe = document.getElementById('socialIframe');
-    const platformNameSpan = document.getElementById('platformName');
-    const closeBtn = document.getElementById('closeIframeBtn');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                currentFallbackUrl = url;
+            }
 
-    // get all social cards
-    const cards = document.querySelectorAll('.social-card');
+            // Handle card click
+            document.querySelectorAll('.social-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    const platform = this.dataset.platform || 'Social';
+                    const isEmbed = this.dataset.embed === 'true';
+                    let url = this.dataset.url || '';
 
-    // function to open platform in iframe
-    function openPlatform(url, platformName) {
-      if (!url) return;
-      // set iframe src
-      iframe.src = url;
-      // update platform title
-      platformNameSpan.textContent = platformName || 'Social';
-      // show overlay
-      overlay.classList.add('active');
-      // prevent body scroll
-      document.body.style.overflow = 'hidden';
-    }
+                    if (!url) return;
 
-    // close overlay
-    function closeIframe() {
-      overlay.classList.remove('active');
-      // clear iframe src to stop loading / audio
-      iframe.src = 'about:blank';
-      document.body.style.overflow = '';
-    }
+                    // Ensure https
+                    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                        url = 'https://' + url;
+                    }
 
-    // event listeners for each card
-    cards.forEach(card => {
-      card.addEventListener('click', function(e) {
-        const platform = this.dataset.platform || 'Social';
-        let url = this.dataset.url;
+                    if (isEmbed) {
+                        // Use embed URL if provided, otherwise use the main URL
+                        let embedUrl = this.dataset.embedUrl || url;
+                        if (!embedUrl.startsWith('http://') && !embedUrl.startsWith('https://')) {
+                            embedUrl = 'https://' + embedUrl;
+                        }
+                        // For YouTube, TikTok, X we need to keep the embed URL as is
+                        // They will show the embed page (which works)
+                        openEmbed(embedUrl, platform);
+                    } else {
+                        // Blocked: show fallback with open in new tab
+                        showFallback(platform, url);
+                    }
+                });
+            });
 
-        // if url is relative or empty, skip
-        if (!url) {
-          console.warn('no url for platform', platform);
-          return;
-        }
+            // Close button
+            closeBtn.addEventListener('click', closeIframe);
 
-        // enforce https if not already
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-          url = 'https://' + url;
-        }
+            // ESC key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                    closeIframe();
+                }
+            });
 
-        openPlatform(url, platform);
-      });
+            // Click on overlay background (but not on iframe or fallback content) closes it
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay || e.target === iframeWrapper) {
+                    closeIframe();
+                }
+            });
 
-      // optional: touch feedback
-      card.addEventListener('touchstart', function() {
-        // just a small visual feedback, nothing else
-      }, { passive: true });
-    });
-
-    // close button
-    closeBtn.addEventListener('click', closeIframe);
-
-    // also close on ESC key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && overlay.classList.contains('active')) {
-        closeIframe();
-      }
-    });
-
-    // if someone clicks on overlay background (outside iframe) – we keep it intentional,
-    // but we want to close only if click on overlay itself (not iframe).
-    // Actually we want to close when clicking the overlay backdrop (the gray area)
-    // but we must not close when clicking inside iframe. 
-    // We'll add a listener on overlay but check if target is overlay itself or header/close.
-    overlay.addEventListener('click', function(e) {
-      // if the click is directly on the overlay (not on iframe or header)
-      if (e.target === overlay) {
-        closeIframe();
-      }
-    });
-
-    // Prevent iframe clicks from bubbling to overlay (so clicking inside iframe doesn't close)
-    // but we can't really stop iframe internal clicks. However, we use the overlay click 
-    // with target check, so if click is inside iframe, e.target will be iframe or its content.
-    // But due to same-origin policy, we can't detect clicks inside cross-origin iframe easily.
-    // So we use a different approach: we don't close on overlay click, only on close button/ESC.
-    // We'll keep it simple: close only by button or ESC.
-    // Remove the overlay click close to avoid accidental closes.
-    overlay.removeEventListener('click', closeIframe);
-    // we re-attach a safer version: only close if click on overlay background, but not if iframe.
-    // We'll use a more robust approach: close only if click on overlay and not on iframe wrapper.
-    overlay.addEventListener('click', function(e) {
-      // if the click is on the overlay background (not on iframe or header)
-      if (e.target === overlay || e.target === document.querySelector('.iframe-wrapper')) {
-        closeIframe();
-      }
-    });
-
-    // also close if user clicks on the header's close button (already handled)
-
-    // extra: if window loses focus? no
-
-    console.log('Social Hub ready — click any logo to open in full‑screen iframe');
-  })();
-</script>
+            console.log('Social Hub with smart iframe handling loaded.');
+            console.log('🟢 Embed: YouTube, X, TikTok  |  🟡 Link: Facebook, Instagram, Messenger');
+        })();
+    </script>
 
 </body>
   </html>
